@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+
 const ContactForm = (props) => {
     const initialFieldvalues = {
         fullName: '',
@@ -6,7 +7,20 @@ const ContactForm = (props) => {
         email: '',
         address: ''
     }
-    var [values, setValues] = useState(initialFieldvalues);
+    var [values, setValues] = useState(initialFieldvalues)
+
+    useEffect(() => {
+        if(props.currentId == ""){
+            setValues({
+                ...initialFieldvalues  
+            })
+        } else{
+            setValues({
+                ...props.contactObjects[props.currentId]
+            })
+        }
+    }, [props.currentId, props.contactObjects])
+
     const handleInputChange = e => {
         var {name, value} = e.target
         setValues({
@@ -15,8 +29,8 @@ const ContactForm = (props) => {
         })
     }
     const handleFormSubmit = e => {
-        e.preventDefault()
-        props.addOrEdit(values)
+        e.preventDefault();
+        props.addOrEdit(values);
     }
     return (
         <form autoComplete="off" onSubmit={handleFormSubmit}>
@@ -58,7 +72,7 @@ const ContactForm = (props) => {
                     onChange={handleInputChange} />
             </div>
             <div className="form-group">
-                <input type="submit" value="Save" className="btn btn-primary btn-block" />
+                <input type="submit" value={props.currentId == "" ? "Save" : "Update"} className="btn btn-primary btn-block" />
             </div>
         </form>
     );
